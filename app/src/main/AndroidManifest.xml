@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.example.android.learnschematic.data.NotesProvider"
+            android:name="com.example.android.learnschematic.data.generated.NotesProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

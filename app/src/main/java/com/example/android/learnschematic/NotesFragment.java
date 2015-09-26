@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.android.learnschematic.data.NoteColumns;
+import com.example.android.learnschematic.data.NotesAdapter;
 import com.example.android.learnschematic.data.NotesProvider;
 import com.example.android.learnschematic.data.model.Note;
 
@@ -30,6 +32,7 @@ public class NotesFragment extends Fragment implements LoaderManager.LoaderCallb
     private Callback mListener;
 
     private static final int CURSOR_LOADER_ID = 0;
+    private NotesAdapter mCursorAdapter;
 
     public static NotesFragment newInstance() {
         NotesFragment fragment = new NotesFragment();
@@ -76,9 +79,9 @@ public class NotesFragment extends Fragment implements LoaderManager.LoaderCallb
             batch.add(builder.build());
         }
 
-        try{
+        try {
             getActivity().getContentResolver().applyBatch(NotesProvider.AUTHORITY, batch);
-        } catch(RemoteException | OperationApplicationException e){
+        } catch (RemoteException | OperationApplicationException e) {
             Log.e(LOG_TAG, "Error applying batch insert", e);
         }
 
@@ -90,9 +93,9 @@ public class NotesFragment extends Fragment implements LoaderManager.LoaderCallb
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_notes, container, false);
 
-        ListView list = (ListView)rootView.findViewById(R.id.list);
-        
-
+        ListView list = (ListView) rootView.findViewById(R.id.list);
+        mCursorAdapter = new NotesAdapter(getActivity(), null, 0);
+        list.setAdapter(mCursorAdapter);
 
 
         return rootView;
@@ -124,16 +127,21 @@ public class NotesFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+        return new CursorLoader(getActivity(), NotesProvider.Notes.NOTES,
+                null,
+                null,
+                null,
+                null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
+        mCursorAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        mCursorAdapter.swapCursor(null);
 
     }
 

@@ -24,12 +24,12 @@ public class NotesAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
 
-        View viewLayout = (View) LayoutInflater.from(context).inflate(R.layout.list_item, viewGroup);
+        View view = LayoutInflater.from(context).inflate(R.layout.list_item, viewGroup, false);
 
-        ViewHolder viewHolder = new ViewHolder(viewLayout);
-        viewLayout.setTag(viewHolder);
+        ViewHolder viewHolder = new ViewHolder(view);
+        view.setTag(viewHolder);
 
-        return viewLayout;
+        return view;
     }
 
     @Override
